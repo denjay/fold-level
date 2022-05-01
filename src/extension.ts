@@ -2,11 +2,13 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
+const myStatusBarlist: Array<vscode.StatusBarItem> = []; // 用于保存新增的状态栏项
+const allLevelList = ["∞", "1", "2", "3", "4", "5", "6", "7"];
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate({ subscriptions }: vscode.ExtensionContext) {
-  const levelList = [0, 1, 2, 3, 4, 5, 6, 7];
-  levelList.forEach((level) => {
+  allLevelList.forEach((level) => {
     const myCommandId = `fold-level.changeFoldLevel${level}`;
     subscriptions.push(
       vscode.commands.registerCommand(myCommandId, async () => {
@@ -24,7 +26,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
         );
         // 先展开所有,再按层级进行折叠
         await vscode.commands.executeCommand("editor.unfoldAll");
-        if (level > 0) {
+        if (level !== "∞") {
           await vscode.commands.executeCommand(`editor.foldLevel${level}`);
         }
         // 窗口滚动回中间行
@@ -44,9 +46,31 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
     );
     myStatusBarItem.command = myCommandId;
     myStatusBarItem.text = String(level);
-    myStatusBarItem.tooltip = level > 0 ? `Fold Level ${level}` : "Unfold All";
-    myStatusBarItem.show();
+    myStatusBarItem.tooltip =
+      level !== "∞" ? `Fold Level ${level}` : "Unfold All";
+    myStatusBarlist.push(myStatusBarItem);
     subscriptions.push(myStatusBarItem);
+  });
+
+  updateStatusBarItem();
+  subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(() => {
+      updateStatusBarItem();
+    })
+  );
+}
+
+function updateStatusBarItem() {
+  let levelList = vscode.workspace.getConfiguration("foldLevel").get("level");
+  if (Array.isArray(levelList) && levelList.length === 0) {
+    levelList = allLevelList;
+  }
+  myStatusBarlist.forEach((item) => {
+    if ((levelList as string[]).includes(item.text)) {
+      item.show();
+    } else {
+      item.hide();
+    }
   });
 }
 

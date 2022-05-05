@@ -1,7 +1,9 @@
 {
 	"name": "fold-level",
 	"displayName": "fold-level",
-	"description": "change fold level quickly",
+	"description": "Add fold level button on the status bar. Change fold level quickly.",
+	"publisher": "denjay",
+	"icon": "assets/fold-level.png",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.66.0"
@@ -9,6 +11,10 @@
 	"categories": [
 		"Other"
 	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/denjay/fold-level.git"
+	},
 	"activationEvents": [
 		"onStartupFinished"
 	],

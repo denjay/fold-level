@@ -27,7 +27,16 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
         // 先展开所有,再按层级进行折叠
         await vscode.commands.executeCommand("editor.unfoldAll");
         if (level !== "∞") {
-          await vscode.commands.executeCommand(`editor.foldLevel${level}`);
+          // 如果foldSubLevels为真,折叠所有子节点
+          if (
+            vscode.workspace.getConfiguration("foldLevel").get("foldSubLevels")
+          ) {
+            for (let i = 7; i >= Number(level); i--) {
+              await vscode.commands.executeCommand(`editor.foldLevel${i}`);
+            }
+          } else {
+            await vscode.commands.executeCommand(`editor.foldLevel${level}`);
+          }
         }
         // 窗口滚动回中间行
         editor.revealRange(

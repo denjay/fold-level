@@ -42,6 +42,11 @@
 						]
 					},
 					"uniqueItems": true
+				},
+				"foldLevel.foldSubLevels": {
+					"type": "boolean",
+					"default": false,
+					"description": "Fold sub levels."
 				}
 			}
 		}

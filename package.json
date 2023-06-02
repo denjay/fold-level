@@ -4,7 +4,7 @@
 	"description": "Add fold level button on the status bar. Change fold level quickly.",
 	"publisher": "denjay",
 	"icon": "assets/fold-level.png",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.66.0"
 	},
